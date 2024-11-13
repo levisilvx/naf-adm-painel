@@ -1,8 +1,44 @@
+import { filterStandardClaims } from "next-firebase-auth-edge/lib/auth/claims";
+import { Tokens, getTokens } from "next-firebase-auth-edge";
+import { cookies } from "next/headers";
+import { User } from "@/context/auth-context"
+import { AuthProvider } from "@/context/auth-provider";
+
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme/theme-provider"
+
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme/theme-provider"
+
+import { Inter } from "next/font/google"
+
+import "./globals.css";
+
+const toUser = ({ decodedToken }: Tokens): User => {
+  const {
+    uid,
+    email,
+    picture: photoURL,
+    email_verified: emailVerified,
+    phone_number: phoneNumber,
+    name: displayName,
+    source_sign_in_provider: signInProvider,
+  } = decodedToken;
+ 
+  const customClaims = filterStandardClaims(decodedToken);
+
+ 
+  return {
+    uid,
+    email: email ?? null,
+    displayName: displayName ?? null,
+    photoURL: photoURL ?? null,
+    phoneNumber: phoneNumber ?? null,
+    emailVerified: emailVerified ?? false,
+    providerId: signInProvider,
+    customClaims,
+  };
+};
+ 
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,13 +51,27 @@ export const metadata: Metadata = {
   description: "Made by Levi Morais",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const tokens = await getTokens(await cookies(), {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
+    cookieName: 'AuthToken',
+    cookieSignatureKeys: [
+      'AVuYwhrby45PqE3CPDLJcNBP463Cyfkm'
+    ],
+    serviceAccount: {
+      projectId: "naf-admin-panel",
+      clientEmail: "firebase-adminsdk-5myyy@naf-admin-panel.iam.gserviceaccount.com",
+      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY as string,
+    }
+  });
+  const user = tokens ? toUser(tokens) : null;
+
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
         className={`${inter.variable} antialiased`}
       >
@@ -32,7 +82,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <AuthProvider user={user}>
+              {children}
+            </AuthProvider>
           </ThemeProvider>
       </body>
     </html>

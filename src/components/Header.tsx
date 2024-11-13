@@ -8,7 +8,6 @@ import { AlignJustify } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import { Button } from './ui/button';
 
-
 export function Header() {
   const currentPath = usePathname();
 
@@ -40,7 +39,9 @@ export function Header() {
             </nav>
           </SheetContent>
         </Sheet>
-        <ModeToggle/>
+        <div className='flex items-center gap-2'>
+        </div>
+        
       </div>
       <header className="hidden sm:flex flex-row justify-between items-center pb-10">
         <nav className="flex flex-row gap-10 text-lg font-medium">
@@ -54,7 +55,9 @@ export function Header() {
             Atendimentos
           </Link>
         </nav>
-        <ModeToggle />
+        <div className='flex items-center gap-2'>
+          <ModeToggle />
+        </div>
       </header>
     </div>
   );

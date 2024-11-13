@@ -1,11 +1,24 @@
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { getTokens } from 'next-firebase-auth-edge';
+import { cookies } from 'next/headers';
+import { clientConfig, serverConfig } from '@/config';
+import { redirect } from 'next/navigation';
  
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/Header";
+
 import { VolunteersListCard } from "@/components/volunteers/volunteers-list-card";
 
-export default function Home() {
+export default async function Voluntarios() {
+  const tokens = await getTokens(cookies(), {
+    apiKey: clientConfig.apiKey,
+    cookieName: serverConfig.cookieName,
+    cookieSignatureKeys: serverConfig.cookieSignatureKeys,
+    serviceAccount: serverConfig.serviceAccount,
+  });
 
+  if (!tokens) {
+    redirect("/signin");
+  }
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>

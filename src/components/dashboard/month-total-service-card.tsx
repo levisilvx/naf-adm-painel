@@ -6,7 +6,7 @@ export function MonthTotalServiceCard() {
         <Card >
           <CardHeader>
             <CardTitle className="flex flex-row justify-between items-center text-md font-medium">
-              Total de atendimentos
+              Atendimentos neste mês
               <Headset/>
             </CardTitle>
           </CardHeader>
