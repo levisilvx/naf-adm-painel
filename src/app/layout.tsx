@@ -4,14 +4,16 @@ import { cookies } from "next/headers";
 import { User } from "@/context/auth-context"
 import { AuthProvider } from "@/context/auth-provider";
 
+import { Inter } from "next/font/google"
 import type { Metadata } from "next";
+import "./globals.css";
 
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider"
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/context/react-query";
 
-import { Inter } from "next/font/google"
 
-import "./globals.css";
 
 const toUser = ({ decodedToken }: Tokens): User => {
   const {
@@ -83,7 +85,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <AuthProvider user={user}>
-              {children}
+              <QueryClientProvider client={queryClient}>
+                  {children}
+              </QueryClientProvider>
             </AuthProvider>
           </ThemeProvider>
       </body>

@@ -39,8 +39,7 @@ export function Header() {
             </nav>
           </SheetContent>
         </Sheet>
-        <div className='flex items-center gap-2'>
-        </div>
+        <ModeToggle />
         
       </div>
       <header className="hidden sm:flex flex-row justify-between items-center pb-10">
@@ -55,9 +54,7 @@ export function Header() {
             Atendimentos
           </Link>
         </nav>
-        <div className='flex items-center gap-2'>
-          <ModeToggle />
-        </div>
+        <ModeToggle />
       </header>
     </div>
   );

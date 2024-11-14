@@ -4,7 +4,7 @@ import { clientConfig, serverConfig } from '@/config';
 import { redirect } from 'next/navigation';
 
 import { Button } from "@/components/ui/button"
-import { Header } from "@/components/Header";
+import { Header } from "@/components/header";
 
 import { 
   Table, 
