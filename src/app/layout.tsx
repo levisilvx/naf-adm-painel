@@ -8,11 +8,11 @@ import { Inter } from "next/font/google"
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/theme/theme-provider"
+import { Toaster, ToasterProps } from "sonner";
+import { useTheme } from "next-themes"
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/context/react-query";
-
 
 
 const toUser = ({ decodedToken }: Tokens): User => {
@@ -77,8 +77,8 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} antialiased`}
       >
-        <Toaster richColors />
-        <ThemeProvider
+        <Toaster richColors/>
+        <NextThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
@@ -89,7 +89,7 @@ export default async function RootLayout({
                   {children}
               </QueryClientProvider>
             </AuthProvider>
-          </ThemeProvider>
+          </NextThemeProvider>
       </body>
     </html>
   );

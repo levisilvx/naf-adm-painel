@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils";
 
 import { toast } from "sonner";
+
 import { CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
@@ -47,7 +48,6 @@ import {
 } from "@/components/ui/form"
 
 import { createNewServiceAction } from "@/app/actions/create-new-service-action";
-import { useRouter } from "next/navigation";
 
 export const createNewServiceSchema = z.object({
   date: z.date(
@@ -55,53 +55,63 @@ export const createNewServiceSchema = z.object({
       required_error: "Data do atendimento é um campo obrigatório",
     }
   ),
-  cpf: z.string().optional().default(""),
-  cnpj: z.string().optional().default(""),
-  observation: z.string().optional().default(""),
-  phoneNumber: z.string().optional().default(""),
+  cpf: z.string().optional(),
+  cnpj: z.string().optional(),
+  observation: z.string().optional(),
+  phoneNumber: z.string().optional(),
   fullName: z.string(
     {
       required_error: "Nome completo é um campo obrigatório",
     }
-  ),
+  ).min(10),
   category: z.string(
     {
-      required_error: "Categoria é um campo obrigatório",
+      required_error:"Categoria é um campo obrigatório"
     }
-  ),
+  ).min(3,{ message: "Categoria é um campo obrigatório"}),
   serviceType: z.string(
     {
       required_error: "Tipo de atendimento é um campo obrigatório",
     }
-  ),
+  ).min(3, {message: "Tipo de atendimento é um campo obrigatório"}),
   city: z.string(
     {
       required_error: "Cidade é um campo obrigatório",
     }
-  ),
+  ).min(3, { message: "Cidade é um campo obrigatório"}),
   attendant: z.string(
     {
       required_error: "Atendente é um campo obrigatório",
     }
-  )
+  ).min(3, { message: "Atendente é um campo obrigatório"})
 })
+
+export const defaultValues = {
+  cpf: "",
+  cnpj: "",
+  fullName: "",
+  phoneNumber: "",
+  category: "",
+  serviceType: "",
+  observation: "",
+  city: "",
+  attendant: ""
+}
 
 
 export function NewServiceForm() {
   const form = useForm<z.infer<typeof createNewServiceSchema>>({
     resolver: zodResolver(createNewServiceSchema),
+    defaultValues
   })
-
-  const router = useRouter();
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm();
+  
   const [output, setOutput] = useState("")
 
-  const [date, setDate] = useState<Date>()
-  const [category, setCategory] = useState("")
-  const [serviceType, setServiceType] = useState("")
-  const [attendant, setAttendant] = useState("")
+  function clearNewServiceFormFields(){
+    form.reset(defaultValues)
+  }
 
-  function createNewService(data: z.infer<typeof createNewServiceSchema>) {
+  function handleCreateNewService(data: z.infer<typeof createNewServiceSchema>) {
     setOutput(JSON.stringify(data, null, 2))
     const createNewServicePromise = createNewServiceAction(data)
     toast.promise(createNewServicePromise, {
@@ -112,12 +122,13 @@ export function NewServiceForm() {
       error: 'Erro ao cadastrar atendimento :(',
     });
     
+   clearNewServiceFormFields()
   }
 
   return (
     <Form {...form}>
       <form 
-        onSubmit={form.handleSubmit(createNewService)}
+        onSubmit={form.handleSubmit(handleCreateNewService)}
       >
         <CardContent className="flex flex-col items-start gap-4 sm:px-20 md:px-40">
           <FormField
@@ -133,7 +144,8 @@ export function NewServiceForm() {
                         variant={"outline"}
                         className={cn(
                           "sm:px-5 w-full sm:w-[280px] justify-center md:justify-start  text-left font-normal ",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
+                          field.value && "bg-primary text-background font-semibold hover:bg-primary/90 hover:text-background"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -246,10 +258,14 @@ export function NewServiceForm() {
                 render={({ field }) => (
                   <FormItem className="space-y-0">
                     <FormLabel className="font-semibold">Categoria*</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select 
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione uma categoria" />
+                          <SelectValue  placeholder="Selecione uma categoria" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -280,7 +296,11 @@ export function NewServiceForm() {
                 render={({ field }) => (
                   <FormItem className="space-y-0">
                     <FormLabel className="font-semibold">Tipo de atendimento*</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select 
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione um tipo de atendimento" />
@@ -346,7 +366,11 @@ export function NewServiceForm() {
                 render={({ field }) => (
                   <FormItem className="space-y-0">
                     <FormLabel className="font-semibold">Atendente*</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select 
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione o(a) atendente" />
