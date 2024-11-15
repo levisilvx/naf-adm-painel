@@ -28,28 +28,24 @@ export function SingInForm() {
   const handleSignIn = async (data: signInForm) => {
     setError("");
     try {
+      const credential = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      const idToken = await credential.user.getIdToken();
+  
+      // Sets authenticated browser cookies
+      await fetch('/api/login', {
+        headers: {
+          Authorization: `Bearer ${idToken}`
+        }
+      });
+      router.push("/");
 
-    const credential = await signInWithEmailAndPassword(
-      auth,
-      data.email,
-      data.password
-    );
-    const idToken = await credential.user.getIdToken();
- 
-    // Sets authenticated browser cookies
-    await fetch('/api/login', {
-      headers: {
-        Authorization: `Bearer ${idToken}`
-      }
-    });
- 
-    console.log("console do signin form ",credential.user)
-    console.log("console do useAuth ",user)
-
-    router.push("/");
-  } catch (err) {
-    setError((err as Error).message)
-  }
+    } catch (err) {
+      setError((err as Error).message)
+    }
   };
 
   return (
@@ -74,7 +70,7 @@ export function SingInForm() {
         {...register('password')} 
       />
       {error && (
-        <div className=''>
+        <div>
           <span className='text-destructive font-bold'>Credenciais inválidas*</span>
         </div>
       )}

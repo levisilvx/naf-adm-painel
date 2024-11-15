@@ -13,7 +13,7 @@ export default async function Atendimentos() {
     cookieSignatureKeys: serverConfig.cookieSignatureKeys,
     serviceAccount: serverConfig.serviceAccount,
   });
-
+  
   if (!tokens) {
     redirect("/signin");
   }
@@ -22,7 +22,7 @@ export default async function Atendimentos() {
       <Header/>
       <Card className='mt-10'>
         <CardHeader>
-            <CardTitle className='text-foreground font-bold text-4xl py-5 md:pt-10 pb-5 sm:px-14'>Novo atendimento</CardTitle>
+            <CardTitle className='text-foreground font-bold text-4xl py-5 md:pt-10 pb-5 sm:px-14 md:px-[136px]'>Novo atendimento</CardTitle>
         </CardHeader>
         <NewServiceForm/>
       </Card>

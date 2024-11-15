@@ -17,6 +17,7 @@ import {
 import { ServicesTableRow } from "@/components/services/service-table-row";
 import { OrderTableFilters } from "@/components/services/service-table-filters";
 import { Pagination } from "@/components/services/pagination";
+import Link from 'next/link';
 
 export default async function Atendimentos() {
   const tokens = await getTokens(cookies(), {
@@ -35,9 +36,11 @@ export default async function Atendimentos() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <h1 className="text-foreground font-bold text-4xl tracking-tight py-5 md:py-2">Atendimentos</h1>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+        <Link href={"/novo-atendimento"}>
           <Button className="font-semibold">
             Novo Atendimento
           </Button>
+        </Link>
         </div>
       </div>
 
@@ -47,12 +50,11 @@ export default async function Atendimentos() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[64px]"></TableHead>
-                <TableHead className="w-[120px]">Identificador</TableHead>
+                <TableHead className="w-[100px]"></TableHead>
                 <TableHead>Contribuinte</TableHead>
-                <TableHead className="w-[160px]">Atendente</TableHead>
-                <TableHead className="w-[200px]">Categoria</TableHead>
-                <TableHead className="w-[160px]">Realizado há</TableHead>
+                <TableHead className="w-[200px]">Atendente</TableHead>
+                <TableHead className="w-[230px]">Categoria</TableHead>
+                <TableHead className="w-[180px]">Realizado há</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

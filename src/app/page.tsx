@@ -30,7 +30,7 @@ export default async function Home() {
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-        <h1 className="text-foreground font-bold text-4xl py-5 md:py-0">Dashboard</h1>
+        <h1 className="text-foreground font-bold text-4xl py-5 md:py-0">NAF - UFCA</h1>
           <Link href={"/novo-atendimento"}>
             <Button className="font-semibold">
               Novo Atendimento

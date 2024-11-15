@@ -11,7 +11,7 @@ export function RecentServicesItem() {
       </Avatar>
       <div className="flex flex-col">
         <span className="font-bold text-base">Levi Morais</span>
-        <Badge variant={'secondary'} className="font-semibold">Emissão de Boleto</Badge>
+        <Badge variant={'secondary'} className="font-semibold text-xs">Emissão de Boleto</Badge>
       </div>
       </div>
       <span className="text-sm text-muted-foreground"> há duas horas</span>
