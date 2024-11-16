@@ -14,8 +14,8 @@ export function BestAttendantMonth() {
           <CardContent className="text-3xl text-wrap">
             <div className="flex items-center gap-2">
                 <Avatar className="">
-                    <AvatarImage src="https://static.mundoeducacao.uol.com.br/mundoeducacao/conteudo_legenda/cb208be7dd3f15c6831d98c1a36b441c.jpg" />
-                    <AvatarFallback>SM</AvatarFallback>
+                    <AvatarImage src="" />
+                    <AvatarFallback className="font-semibold ">LM</AvatarFallback>
                 </Avatar>
                 <span className="font-bold tracking-tight text-md">Levi Morais</span>
             </div>
