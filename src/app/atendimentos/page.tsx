@@ -1,7 +1,6 @@
-import { getTokens } from 'next-firebase-auth-edge';
-import { cookies } from 'next/headers';
-import { clientConfig, serverConfig } from '@/config';
-import { redirect } from 'next/navigation';
+"use client"
+import RouteProtector from '@/components/route-protector';
+import Link from 'next/link';
 
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header";
@@ -17,19 +16,8 @@ import {
 import { ServicesTableRow } from "@/components/services/service-table-row";
 import { OrderTableFilters } from "@/components/services/service-table-filters";
 import { Pagination } from "@/components/services/pagination";
-import Link from 'next/link';
 
-export default async function Atendimentos() {
-  const tokens = await getTokens(cookies(), {
-    apiKey: clientConfig.apiKey,
-    cookieName: serverConfig.cookieName,
-    cookieSignatureKeys: serverConfig.cookieSignatureKeys,
-    serviceAccount: serverConfig.serviceAccount,
-  });
-
-  if (!tokens) {
-    redirect("/signin");
-  }
+function Atendimentos() {
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>
@@ -71,3 +59,5 @@ export default async function Atendimentos() {
     </div>
   );
 }
+
+export default RouteProtector(Atendimentos) 

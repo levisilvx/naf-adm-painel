@@ -1,15 +1,17 @@
 "use client"
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@/context/auth-context';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'
+import { AlignJustify, LogOut } from 'lucide-react';
 
-import { ModeToggle } from "./ui/mode-toggle";
-import { AlignJustify } from 'lucide-react';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 import { Button } from './ui/button';
+import { ModeToggle } from "./ui/mode-toggle";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 
 export function Header() {
   const currentPath = usePathname();
+  const { logOut } = useAuth();
 
   return (
     <div>
@@ -57,7 +59,18 @@ export function Header() {
             Atendimentos
           </Link>
         </nav>
-        <ModeToggle />
+        <div className='flex items-center gap-2'>
+          <ModeToggle />
+          <div>
+            <Button
+              type="button"
+              variant={"destructive"}
+              onClick={logOut}
+            >
+              <LogOut/>
+            </Button>
+          </div>
+        </div>
       </header>
     </div>
   );

@@ -1,6 +1,4 @@
 "use client"
-import { useState } from "react";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +7,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
+import { createNewVolunteerAction } from "@/app/actions/create-new-volunteer";
+import { useMutation } from "@tanstack/react-query";
 
 const defaultValues = {
   attendantFirstName: "",
@@ -16,7 +17,7 @@ const defaultValues = {
   email:""
 }
 
-const createVolunteerFormSchema = z.object({
+const createNewVolunteerFormSchema = z.object({
   attendantFirstName: z.string(
     {
       required_error: "Campo nome é obrigatório"
@@ -45,25 +46,33 @@ const createVolunteerFormSchema = z.object({
     }, { message: "Informe seu email institucional UFCA"} )
 })
 
-type CreateVolunteerFormData = z.infer<typeof createVolunteerFormSchema>
+type CreateNewVolunteerFormData = z.infer<typeof createNewVolunteerFormSchema>
 
 export function CreateVolunteerForm() {
-  const [output, setOutput] = useState("")
 
   const { 
     register,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm<CreateVolunteerFormData>({
-    resolver: zodResolver(createVolunteerFormSchema),
+  } = useForm<CreateNewVolunteerFormData>({
+    resolver: zodResolver(createNewVolunteerFormSchema),
     defaultValues
   })
 
-  function handleCreateVolunteer(data: CreateVolunteerFormData){
-    setOutput(JSON.stringify(data, null, 2))
-    console.log(output)
-    reset(defaultValues) 
+  function handleCreateNewVolunteer(data: CreateNewVolunteerFormData){
+    console.log(JSON.stringify(data, null, 2))
+    const createNewVolunteerPromise = createNewVolunteerAction(data)
+    toast.promise(createNewVolunteerPromise, {
+      loading: 'Carregando...',
+      success: () => {
+        return "Voluntário cadastrado com sucesso :)";
+      },
+      error: 'Erro ao cadastrar atendimento :(',
+    });
+
+    console.log(createNewVolunteerPromise)
+    reset(defaultValues)
   }
   return (
     <DialogContent>
@@ -71,7 +80,7 @@ export function CreateVolunteerForm() {
         <DialogTitle>Cadastrar novo voluntário</DialogTitle>
       </DialogHeader>
       <div className="">
-        <form onSubmit={handleSubmit(handleCreateVolunteer)}>
+        <form onSubmit={handleSubmit(handleCreateNewVolunteer)}>
           <div className="flex flex-col items-start gap-2">
             <div className="flex flex-col sm:flex-row gap-4 w-full">
               <div className="w-full">
@@ -112,11 +121,6 @@ export function CreateVolunteerForm() {
           </div>
         </form>
       </div>
-      <DialogFooter>
-        <pre>
-          <code>{output}</code>
-        </pre>
-      </DialogFooter>
     </DialogContent>
   );
 }

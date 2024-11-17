@@ -3,7 +3,6 @@ import { SingInForm } from "@/components/signin/signin-form";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function SignIn() {
-
   return (
     <div className="min-h-screen flex md:grid grid-cols-2 font-sans">
       <aside className="hidden md:flex flex-col justify-between p-20 h-full border-r border-foreground/5 bg-muted text-muted-foreground">

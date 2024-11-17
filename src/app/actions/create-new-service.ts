@@ -12,25 +12,24 @@ interface createNewServiceFormData {
   category: string,
   serviceType: string,
   city: string,
-  attendant: string
+  attendantEmail: string
 }
 
 export async function createNewServiceAction(data: createNewServiceFormData) {
-  const formData = JSON.parse(JSON.stringify(data))
   const servicesRef = collection(firestore, "atendimentos")
 
   try {
     const docRef = await addDoc(servicesRef, {
-      date: formData.date,
-      cpf: formData?.cpf,
-      cnpj: formData?.cnpj,
-      observation: formData?.observation,
-      phoneNumber: formData?.phoneNumber,
-      fullName: formData.fullName,
-      category: formData.category,
-      serviceType: formData.serviceType,
-      city: formData.city,
-      attendant: "atendentes/kKSayud0t80FozvJgei6"
+      date: data.date,
+      cpf: data?.cpf,
+      cnpj: data?.cnpj,
+      observation: data?.observation,
+      phoneNumber: data?.phoneNumber,
+      fullName: data.fullName,
+      category: data.category,
+      serviceType: data.serviceType,
+      city: data.city,
+      attendantEmail: "atendentes/kKSayud0t80FozvJgei6"
     })
 
     console.log(docRef)

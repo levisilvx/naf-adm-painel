@@ -1,8 +1,6 @@
-import { getTokens } from 'next-firebase-auth-edge';
-import { cookies } from 'next/headers';
-import { clientConfig, serverConfig } from '@/config';
-import { redirect } from 'next/navigation';
- 
+"use client"
+import RouteProtector from "@/components/route-protector";
+
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header";
 
@@ -10,17 +8,7 @@ import { VolunteersListCard } from "@/components/volunteers/volunteers-list-card
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { CreateVolunteerForm } from '@/components/new-volunteer/create-volunteer-dialog';
 
-export default async function Voluntarios() {
-  const tokens = await getTokens(cookies(), {
-    apiKey: clientConfig.apiKey,
-    cookieName: serverConfig.cookieName,
-    cookieSignatureKeys: serverConfig.cookieSignatureKeys,
-    serviceAccount: serverConfig.serviceAccount,
-  });
-
-  if (!tokens) {
-    redirect("/signin");
-  }
+function Voluntarios() {
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10 lg:px-40">
       <Header/>
@@ -45,3 +33,5 @@ export default async function Voluntarios() {
     </div>
   );
 }
+
+export default RouteProtector(Voluntarios)

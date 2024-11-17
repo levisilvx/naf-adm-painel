@@ -1,46 +1,41 @@
-import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/services/firebase';
 import { useAuth } from '@/context/auth-context';
+import { useRouter } from 'next/navigation';
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { useState } from 'react';
 
-const signInForm = z.object({
+
+const signInFormSchema = z.object({
   email: z.string(),
   password: z.string()
 })
 
-type signInForm = z.infer<typeof signInForm>
+type signInFormData = z.infer<typeof signInFormSchema>
 
 export function SingInForm() {
-  const user = useAuth()
   const router = useRouter();
   const [error, setError] = useState("");
+  const { logIn } = useAuth();
 
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<signInForm>()
+  const { 
+    register,
+    handleSubmit,
+    formState: { isSubmitting }
+  } = useForm<signInFormData>({
+    resolver: zodResolver(signInFormSchema)
+  })
 
-  const handleSignIn = async (data: signInForm) => {
+  const handleSignIn = async (data: signInFormData) => {
     setError("");
     try {
-      const credential = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      const idToken = await credential.user.getIdToken();
-  
-      // Sets authenticated browser cookies
-      await fetch('/api/login', {
-        headers: {
-          Authorization: `Bearer ${idToken}`
-        }
-      });
+      await logIn(data.email, data.password);
+
       router.push("/");
 
     } catch (err) {

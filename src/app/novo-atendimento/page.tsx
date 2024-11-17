@@ -1,22 +1,11 @@
-import { getTokens } from 'next-firebase-auth-edge';
-import { cookies } from 'next/headers';
-import { clientConfig, serverConfig } from '@/config';
-import { redirect } from 'next/navigation';
+"use client"
+
 import { Header } from '@/components/header';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { NewServiceForm } from '@/components/new-service/new-service-form';
+import RouteProtector from '@/components/route-protector';
 
-export default async function Atendimentos() {
-  const tokens = await getTokens(cookies(), {
-    apiKey: clientConfig.apiKey,
-    cookieName: serverConfig.cookieName,
-    cookieSignatureKeys: serverConfig.cookieSignatureKeys,
-    serviceAccount: serverConfig.serviceAccount,
-  });
-  
-  if (!tokens) {
-    redirect("/signin");
-  }
+ function Atendimentos() {
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>
@@ -29,3 +18,5 @@ export default async function Atendimentos() {
     </div>
   );
 }
+
+export default RouteProtector(Atendimentos)

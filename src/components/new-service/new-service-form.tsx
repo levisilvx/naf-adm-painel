@@ -45,7 +45,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 
-import { createNewServiceAction } from "@/app/actions/create-new-service-action";
+import { createNewServiceAction } from "@/app/actions/create-new-service";
 
 export const createNewServiceSchema = z.object({
   date: z.date(
@@ -77,7 +77,7 @@ export const createNewServiceSchema = z.object({
       required_error: "Cidade é um campo obrigatório",
     }
   ).min(3, { message: "Cidade é um campo obrigatório"}),
-  attendant: z.string(
+  attendantEmail: z.string(
     {
       required_error: "Atendente é um campo obrigatório",
     }
@@ -96,9 +96,10 @@ export const defaultValues = {
   attendant: ""
 }
 
+type CreateNewServiceFormData = z.infer<typeof createNewServiceSchema>
 
 export function NewServiceForm() {
-  const form = useForm<z.infer<typeof createNewServiceSchema>>({
+  const form = useForm<CreateNewServiceFormData>({
     resolver: zodResolver(createNewServiceSchema),
     defaultValues
   })
@@ -360,7 +361,7 @@ export function NewServiceForm() {
           <div>
             <FormField
                 control={form.control}
-                name="attendant"
+                name="attendantEmail"
                 render={({ field }) => (
                   <FormItem className="space-y-0">
                     <FormLabel className="font-semibold">Atendente*</FormLabel>
@@ -377,18 +378,18 @@ export function NewServiceForm() {
                       <SelectContent>
                         <SelectItem value="Levi Morais">
                           <div className="flex items-center gap-2">
-                            <Avatar className="h-5 w-5">
-                              <AvatarImage src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7Jf7L1uLyKL81OhzN2fk-x0OSKXABNLEZYg&s" />
-                              <AvatarFallback>LM</AvatarFallback>
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src="https://encrypted-tbn0.gst" />
+                              <AvatarFallback className="text-[10px] flex items-center justify-center pt[2px]">LM</AvatarFallback>
                             </Avatar>
                             <span className="font-bold tracking-tight text-md">Levi Morais</span>
                           </div>
                         </SelectItem>
                         <SelectItem value="Sara Morais">
                           <div className="flex items-center gap-2">
-                            <Avatar className="h-5 w-5">
-                              <AvatarImage src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtbTQRrYgXgiE6Icbs3Gzdq5T8CEQ1lhQXug&s" />
-                              <AvatarFallback>SM</AvatarFallback>
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src="https://encrypted-tbn" />
+                              <AvatarFallback className="text-[10px] flex items-center justify-center pt[2px]">SM</AvatarFallback>
                             </Avatar>
                             <span className="font-bold tracking-tight text-md">Sara Morais</span>
                           </div>
