@@ -41,6 +41,17 @@ export function Header() {
               <Link href="/novo-atendimento" className={currentPath === "/novo-atendimento" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}>
                 Novo Atendimento
               </Link>
+              <div>
+                <Button
+                  type="button"
+                  variant={"ghost"}
+                  className='text-destructive p-0 m-0'
+                  onClick={logOut}
+                > 
+                  Sair
+                  <LogOut/>
+                </Button>
+              </div>
             </nav>
           </SheetContent>
         </Sheet>

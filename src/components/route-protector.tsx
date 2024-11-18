@@ -1,25 +1,40 @@
 "use client"
-import { useAuth } from '../context/auth-context';
+import { getAuth } from 'firebase/auth';
+
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+import { Loader } from 'lucide-react';
 
 const RouteProtector = (WrappedComponent: any) => {
   return function RouteProtector(props: any) {
-    const { user } = useAuth();
+    const auth = getAuth()
+    const [user, loading] = useAuthState(auth);
     const router = useRouter();
-
+ 
+    {/*
     useEffect(() => {
       // If the user is not authenticated, redirect to the login page
       if (!user) {
         router.push('/signin');
       }
-    }, [user, router]);
+    }, []);
+  */}
 
-    // If the user is authenticated, render the WrappedComponent
-    // Otherwise, render null while the redirection is in progress
-    if (!user) {
-      return null;
+    if(loading) {
+      return(
+        <div className='h-screen bg-background flex justify-center items-center'>
+          <div className='animate-pulse'>
+            <Loader className='h-10 w-10 animate-spin'/>
+          </div>
+        </div>
+      )
     }
+
+    if (!user) {
+      router.push('/signin');
+    } 
     return <WrappedComponent {...props} />;
   };
 };

@@ -1,7 +1,6 @@
 "use client"
 import { auth } from "@/services/firebase";
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
-import { redirect } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthProviderProps {
@@ -11,7 +10,7 @@ interface AuthProviderProps {
 interface AuthContextData {
   user: User | null | undefined,
   logIn: typeof logIn,
-  logOut: typeof logOut
+  logOut: typeof logOut,
 }
 
 const logIn = async (email: string, password: string) => {
@@ -25,28 +24,29 @@ const logOut = async () => {
 export const AuthContext = createContext<AuthContextData>({
   user: null,
   logIn,
-  logOut
+  logOut,
 });
 
 export const AuthProvider: React.FunctionComponent<AuthProviderProps> = ({
    children 
   }) => {
-    const [user, setUser] = useState<User | null>();
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
+        console.log("I am in useEffect and user is : ", user);
         if (user) {
-          console.log("O usuário atual é: ", user);
+          console.log("The logged in user state is : ", user);
           setUser(user);
         } else {
           setUser(null)
         }
+  
         return () => {
           unsubscribe();
-        }
-      })
+        };
+      });
     },[user]);
-
     return (
       <AuthContext.Provider value={{ user, logIn, logOut }}>
         {children}

@@ -9,6 +9,7 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { CreateVolunteerForm } from '@/components/new-volunteer/create-volunteer-dialog';
 
 function Voluntarios() {
+
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10 lg:px-40">
       <Header/>
