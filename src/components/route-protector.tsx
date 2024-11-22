@@ -34,6 +34,7 @@ const RouteProtector = (WrappedComponent: any) => {
 
     if (!user) {
       router.push('/signin');
+      return null;
     } 
     return <WrappedComponent {...props} />;
   };

@@ -1,15 +1,17 @@
-"use server"
-import { firestore } from "@/services/firebase"
-import { collection, getDocs } from "firebase/firestore"
+import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
-export type Volunteer = {
+import { firestore } from "@/services/firebase";
+import { collection, getDocs } from "firebase/firestore";
+
+type Volunteer = {
   email: string,
   attendantFirstName: string,
   attendantLastName: string,
   initials: string
 }
 
-export type GetVolunteersResponse = {
+type GetVolunteersResponse = {
   id: string,
   email: string,
   attendantFirstName: string,
@@ -17,7 +19,7 @@ export type GetVolunteersResponse = {
   initials: string
 }
 
-export async function GetVolunteers() {
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
   const volunteersRef = collection(firestore, "atendentes")
   try {
     const responseArray: GetVolunteersResponse[] = [];
@@ -33,16 +35,22 @@ export async function GetVolunteers() {
       });
 
       console.log(responseArray)
-      return JSON.parse(JSON.stringify(responseArray));
+      return new NextResponse(JSON.stringify({
+        status: 200,
+        responseArray
+      }))
 
     } else {
       console.log("No such document")
-      return "No such document"
+      return new NextResponse(JSON.stringify({
+        status: 404,
+        message: "No such document"
+      }))
     }
   } catch (err) {
-    if (err instanceof Error){
-      console.log(err.message)
-     return err.message
-    }
+    return new NextResponse(JSON.stringify({
+      status: 500,
+      message: "Failed to fetch volunteers"
+    }))
   }
 }

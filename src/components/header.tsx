@@ -1,8 +1,8 @@
 "use client"
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/auth-context';
-
 import Link from 'next/link';
+
 import { AlignJustify, LogOut } from 'lucide-react';
 
 import { Button } from './ui/button';
@@ -12,7 +12,6 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './ui/sheet';
 export function Header() {
   const currentPath = usePathname();
   const { logOut } = useAuth();
-
   return (
     <div>
       <div className='sm:hidden flex flex-row justify-between items-center sticky top-0'>

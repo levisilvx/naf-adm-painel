@@ -1,11 +1,10 @@
 "use client"
-
 import { Header } from '@/components/header';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { NewServiceForm } from '@/components/new-service/new-service-form';
 import RouteProtector from '@/components/route-protector';
 
- function Atendimentos() {
+ function NovoAtendimento() {
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>
@@ -19,4 +18,4 @@ import RouteProtector from '@/components/route-protector';
   );
 }
 
-export default RouteProtector(Atendimentos)
+export default RouteProtector(NovoAtendimento)
