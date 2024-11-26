@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader } from "lucide-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
@@ -46,6 +46,8 @@ import {
 } from "@/components/ui/form"
 
 import { createNewServiceAction } from "@/app/actions/create-new-service";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
 
 export const createNewServiceSchema = z.object({
   date: z.date(
@@ -77,12 +79,20 @@ export const createNewServiceSchema = z.object({
       required_error: "Cidade é um campo obrigatório",
     }
   ).min(3, { message: "Cidade é um campo obrigatório"}),
-  attendantEmail: z.string(
+  attendantId: z.string(
     {
       required_error: "Atendente é um campo obrigatório",
     }
   ).min(3, { message: "Atendente é um campo obrigatório"})
 })
+
+type GetVolunteersResponse = {
+  id: string,
+  email: string,
+  attendantFirstName: string,
+  attendantLastName: string,
+  initials: string
+}
 
 export const defaultValues = {
   cpf: "",
@@ -93,12 +103,21 @@ export const defaultValues = {
   serviceType: "",
   observation: "",
   city: "",
-  attendant: ""
+  attendantId: ""
 }
 
 type CreateNewServiceFormData = z.infer<typeof createNewServiceSchema>
 
 export function NewServiceForm() {
+  const { data: volunteers, isLoading} = useQuery({
+    queryKey: ["GetVolunteers"],
+    queryFn: async () => {
+      const response = await api.get('/get-volunteers')
+      console.log(response.data.responseArray)
+      return response.data.responseArray
+    }
+  })
+  
   const form = useForm<CreateNewServiceFormData>({
     resolver: zodResolver(createNewServiceSchema),
     defaultValues
@@ -124,6 +143,16 @@ export function NewServiceForm() {
    clearNewServiceFormFields()
   }
 
+  if (isLoading){
+    return (
+      <div className='h-auto bg-background flex justify-center items-center'>
+        <div className='animate-pulse'>
+          <Loader className='h-10 w-10 animate-spin'/>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Form {...form}>
       <form 
@@ -134,7 +163,7 @@ export function NewServiceForm() {
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem className="md:flex flex-col ">
+              <FormItem className="sm:flex flex-col">
                 <FormLabel className="font-semibold">Data do atendimento*</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -306,8 +335,8 @@ export function NewServiceForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="presencial">Presencial</SelectItem>
-                        <SelectItem value="remoto">Remoto</SelectItem>
+                        <SelectItem value="Presencial">Presencial</SelectItem>
+                        <SelectItem value="Remoto">Remoto</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -361,7 +390,7 @@ export function NewServiceForm() {
           <div>
             <FormField
                 control={form.control}
-                name="attendantEmail"
+                name="attendantId"
                 render={({ field }) => (
                   <FormItem className="space-y-0">
                     <FormLabel className="font-semibold">Atendente*</FormLabel>
@@ -371,29 +400,26 @@ export function NewServiceForm() {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-[220px]">
                           <SelectValue placeholder="Selecione o(a) atendente" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Levi Morais">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-6 w-6">
-                              <AvatarImage src="https://encrypted-tbn0.gst" />
-                              <AvatarFallback className="text-[10px] flex items-center justify-center pt[2px]">LM</AvatarFallback>
-                            </Avatar>
-                            <span className="font-bold tracking-tight text-md">Levi Morais</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="Sara Morais">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-6 w-6">
-                              <AvatarImage src="https://encrypted-tbn" />
-                              <AvatarFallback className="text-[10px] flex items-center justify-center pt[2px]">SM</AvatarFallback>
-                            </Avatar>
-                            <span className="font-bold tracking-tight text-md">Sara Morais</span>
-                          </div>
-                        </SelectItem>
+                        {volunteers.map((volunteer: GetVolunteersResponse) => {
+                          return(
+                            <div key={volunteer.id}>
+                              <SelectItem value={volunteer.id}>
+                                <div className="flex items-center gap-2">
+                                  <Avatar className="h-6 w-6">
+                                    <AvatarImage src="https://encrypted-tbn0.gst" />
+                                    <AvatarFallback className="text-[10px] flex items-center justify-center">{volunteer.initials}</AvatarFallback>
+                                  </Avatar>
+                                  <span className="font-bold tracking-tight text-md">{volunteer.attendantFirstName} {volunteer.attendantLastName}</span>
+                                </div>
+                              </SelectItem>
+                            </div>
+                          )
+                        })}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -406,11 +432,6 @@ export function NewServiceForm() {
             Cadastrar atendimento
           </Button>
         </CardContent>
-        <CardFooter>
-          <pre>
-            <code>{output}</code>
-          </pre>
-        </CardFooter>
       </form>
     </Form>
   );

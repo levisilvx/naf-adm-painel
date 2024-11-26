@@ -19,7 +19,7 @@ type GetVolunteersResponse = {
   initials: string
 }
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   const volunteersRef = collection(firestore, "atendentes")
   try {
     const responseArray: GetVolunteersResponse[] = [];
@@ -50,7 +50,8 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   } catch (err) {
     return new NextResponse(JSON.stringify({
       status: 500,
-      message: "Failed to fetch volunteers"
+      message: "Failed to fetch volunteers",
+      err
     }))
   }
 }

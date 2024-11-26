@@ -12,6 +12,14 @@ import { TotalServicesChart } from "@/components/dashboard/total-service-chart";
 import { RecentServicesCard } from "@/components/dashboard/recent-services-card";
 
 function Home() {
+  const data = new Date("2024-11-14T03:00:00.000Z")
+  const hoje = new Date
+  const hour = hoje.getHours()
+  const minutes = hoje.getMinutes()
+  const seconds = hoje.getSeconds()
+  const minde = data.setHours(hour, minutes, seconds)
+  const dois = new Date(minde).toISOString()
+  console.log(dois)
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>

@@ -21,13 +21,13 @@ export function VolunteerProfileEditButton() {
                 <Label htmlFor="name" className="text-right">
                   Name
                 </Label>
-                <Input id="name" value="Levi Morais" className="col-span-3" />
+                <Input id="name" value="" className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="username" className="text-right">
-                  Avatar
+                  Email
                 </Label>
-                <Input id="username" value="https://i.pinimg.com/564x/63/40/6b/63406b717cb39ae5b571be878173d198.jpg" className="col-span-3" />
+                <Input id="username" value="" className="col-span-3" />
               </div>
             </div>
             <DialogFooter>

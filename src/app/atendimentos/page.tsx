@@ -1,7 +1,11 @@
 "use client"
+import { useQuery } from '@tanstack/react-query';
+
+import { api } from '@/services/api';
 import RouteProtector from '@/components/route-protector';
 import Link from 'next/link';
 
+import { Loader } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header";
 
@@ -17,7 +21,44 @@ import { ServicesTableRow } from "@/components/services/service-table-row";
 import { OrderTableFilters } from "@/components/services/service-table-filters";
 import { Pagination } from "@/components/services/pagination";
 
+type GetServicesResponse = {
+  id: string,
+  date: string,
+  cpf: string,
+  cnpj: string,
+  observation: string,
+  phoneNumber: string,
+  fullName: string,
+  category: string,
+  serviceType: string,
+  city: string,
+  attendantId: string,
+  attendantFirstName: string,
+  attendantLastName: string,
+  attendantEmail: string,
+  attendantInitials: string,
+}
+
 function Atendimentos() {
+  const { data: services, isLoading} = useQuery({
+    queryKey: ["GetServices"],
+    queryFn: async () => {
+      const response = await api.get('/get-services')
+      console.log(response.data.responseArray)
+      return response.data.responseArray
+    }
+  })
+
+  if (isLoading){
+    return (
+      <div className='h-auto bg-background flex justify-center items-center'>
+        <div className='animate-pulse'>
+          <Loader className='h-10 w-10 animate-spin'/>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="px-8 py-6 md:px-20 md:pt-10">
       <Header/>
@@ -46,10 +87,8 @@ function Atendimentos() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array.from({ length:10 }).map((_, i) => {
-                return(
-                  <ServicesTableRow key={i}/>
-                )
+              {services.map((service: GetServicesResponse) => {
+                return <ServicesTableRow key={service.id} service={service}/>
               })}
             </TableBody>
           </Table>

@@ -1,6 +1,7 @@
 "use server"
 import { firestore } from "@/services/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { GetVolunteerById } from "./get-volunteer-by-id";
 
 interface createNewServiceFormData {
   date: Date,
@@ -12,15 +13,39 @@ interface createNewServiceFormData {
   category: string,
   serviceType: string,
   city: string,
-  attendantEmail: string
+  attendantId: string
+}
+
+type Volunteer = {
+  email: string,
+  attendantFirstName: string,
+  attendantLastName: string,
+  initials: string
+}
+
+type GetVolunteersResponse = {
+  id: string,
+  email: string,
+  attendantFirstName: string,
+  attendantLastName: string,
+  initials: string
 }
 
 export async function createNewServiceAction(data: createNewServiceFormData) {
   const servicesRef = collection(firestore, "atendimentos")
+  //const attendant = <GetVolunteersResponse>{}
+  const date = data.date
+  const now = new Date
+  const hour = now.getHours()
+  const min = now.getMinutes()
+  const sec = now.getSeconds()
+  date.setHours(hour, min, sec)
+
+  const attendant = <GetVolunteersResponse>await GetVolunteerById(data.attendantId)
 
   try {
     const docRef = await addDoc(servicesRef, {
-      date: data.date,
+      date: date.toISOString(),
       cpf: data?.cpf,
       cnpj: data?.cnpj,
       observation: data?.observation,
@@ -29,7 +54,11 @@ export async function createNewServiceAction(data: createNewServiceFormData) {
       category: data.category,
       serviceType: data.serviceType,
       city: data.city,
-      attendantEmail: "atendentes/kKSayud0t80FozvJgei6"
+      attendantId: attendant.id,
+      attendantFirstName: attendant.attendantFirstName,
+      attendantLastName: attendant.attendantLastName,
+      attendantEmail: attendant.email,
+      attendantInitials: attendant.initials
     })
 
     console.log(docRef)

@@ -2,7 +2,7 @@
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
-import { Search, X } from "lucide-react";
+import { Ban, Search } from "lucide-react";
 import { useState } from "react";
 
 export function OrderTableFilters() {
@@ -17,20 +17,20 @@ export function OrderTableFilters() {
           <SelectValue placeholder={"Categoria"}/>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem className="px-4" value="all">Todas</SelectItem>
-          <SelectItem className="px-4" value="parcelamento-simples">Parcelamento - Simples</SelectItem>
-          <SelectItem className="px-4" value="parcelamento-regularize">Parcelamento - Regularize</SelectItem>
-          <SelectItem className="px-4" value="formalizacao">Formalização</SelectItem>
-          <SelectItem className="px-4" value="baixa">Baixa</SelectItem>
-          <SelectItem className="px-4" value="boelto-mensal">Boleto Mensal</SelectItem>
-          <SelectItem className="px-4" value="boleto-parcelamento">Boleto Parcelamento</SelectItem>
-          <SelectItem className="px-4" value="declaracao-anual">Declaração Anual</SelectItem>
-          <SelectItem className="px-4" value="alteracao-cpf">Alteração - CPF</SelectItem>
-          <SelectItem className="px-4" value="alteracao-cnpj">Alteração - CNPJ</SelectItem>
-          <SelectItem className="px-4" value="informacoes">Informações</SelectItem>
-          <SelectItem className="px-4" value="emissao-nf">Emissão de Nota Fiscal</SelectItem>
-          <SelectItem className="px-4" value="segunda-via-cpf">Segunda via do CPF</SelectItem>
-          <SelectItem className="px-4" value="outros">Outros</SelectItem>
+          <SelectItem value="all">Todas</SelectItem>
+          <SelectItem value="parcelamento-simples">Parcelamento - Simples</SelectItem>
+          <SelectItem value="parcelamento-regularize">Parcelamento - Regularize</SelectItem>
+          <SelectItem value="formalizacao">Formalização</SelectItem>
+          <SelectItem value="baixa">Baixa</SelectItem>
+          <SelectItem value="boelto-mensal">Boleto Mensal</SelectItem>
+          <SelectItem value="boleto-parcelamento">Boleto Parcelamento</SelectItem>
+          <SelectItem value="declaracao-anual">Declaração Anual</SelectItem>
+          <SelectItem value="alteracao-cpf">Alteração - CPF</SelectItem>
+          <SelectItem value="alteracao-cnpj">Alteração - CNPJ</SelectItem>
+          <SelectItem value="informacoes">Informações</SelectItem>
+          <SelectItem value="emissao-nf">Emissão de Nota Fiscal</SelectItem>
+          <SelectItem value="segunda-via-cpf">Segunda via do CPF</SelectItem>
+          <SelectItem value="outros">Outros</SelectItem>
         </SelectContent>
       </Select>
       <div className="flex flex-row justify-between sm:justify-start items-start md:items-center gap-2">
@@ -40,7 +40,7 @@ export function OrderTableFilters() {
         </Button>
 
         <Button type="button" variant={"destructive"} size={"xs"} className="h-8 px-6 sm:px-4">
-          <X/>
+          <Ban/>
           Remover filtros
         </Button>
       </div>
